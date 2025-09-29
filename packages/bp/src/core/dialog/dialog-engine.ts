@@ -292,16 +292,16 @@ export class DialogEngine {
     const currentNode = this.findNodeWithoutError(botId, currentFlow, event.state.context?.currentNode)
 
     // Check for a timeout property in the current node
-    let timeoutNode = _.get(currentNode, 'timeout')
+    let timeoutNode: any = _.get(currentNode, 'timeout')
     let timeoutFlow: FlowView | undefined = currentFlow
 
     // Check for a timeout node in the current flow
     if (!timeoutNode) {
-      timeoutNode = this.findNodeWithoutError(botId, currentFlow, 'timeout')
+      timeoutNode = this.findNodeWithoutError(botId, currentFlow, 'timeout') || undefined
       if (!timeoutNode && currentFlow?.name.startsWith('skills/') && event.state.context?.previousFlow) {
         const previousFlow = this.findFlowWithoutError(botId, event.state.context?.previousFlow)
-        timeoutNode = this.findNodeWithoutError(botId, previousFlow, 'timeout')
-        timeoutFlow = previousFlow
+        timeoutNode = this.findNodeWithoutError(botId, previousFlow, 'timeout') || undefined
+        timeoutFlow = previousFlow || undefined
       }
     }
 
@@ -309,16 +309,16 @@ export class DialogEngine {
     if (!timeoutNode) {
       const timeoutNodeName = _.get(timeoutFlow, 'timeoutNode')
       if (timeoutNodeName) {
-        timeoutNode = this.findNodeWithoutError(botId, timeoutFlow, timeoutNodeName)
+        timeoutNode = this.findNodeWithoutError(botId, timeoutFlow, timeoutNodeName) || undefined
       }
     }
 
     // Check for a timeout.flow.json and get the start node
     if (!timeoutNode) {
-      timeoutFlow = this.findFlowWithoutError(botId, 'timeout.flow.json')
+      timeoutFlow = this.findFlowWithoutError(botId, 'timeout.flow.json') || undefined
       if (timeoutFlow) {
         const startNodeName = timeoutFlow.startNode
-        timeoutNode = this.findNodeWithoutError(botId, timeoutFlow, startNodeName)
+        timeoutNode = this.findNodeWithoutError(botId, timeoutFlow, startNodeName) || undefined
       }
     }
 

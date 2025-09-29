@@ -47,13 +47,11 @@ export class QnaRouter extends CustomRouter {
       this.checkTokenHeader,
       this.needPermissions('read', 'module.qna'),
       this.asyncMiddleware(async (req, res) => {
-        const {
-          query: { question = '', filteredContexts = [], limit, offset }
-        } = req
+        const { question, filteredContexts, limit, offset } = req.query
 
         const { items, count } = await this.qnaService.getQuestions(req.params.botId, {
-          question,
-          filteredContexts,
+          question: typeof question === 'string' ? question : '',
+          filteredContexts: Array.isArray(filteredContexts) ? (filteredContexts as string[]) : [] as any,
           limit: Number(limit),
           offset: Number(offset)
         })

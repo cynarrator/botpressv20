@@ -8,7 +8,12 @@ import { FatalError } from 'errors'
 import fs from 'fs'
 import { inject, injectable } from 'inversify'
 import defaultJsonBuilder from 'json-schema-defaults'
-import _, { PartialDeep } from 'lodash'
+import _ from 'lodash'
+
+// Custom PartialDeep type since it's not available in current lodash types
+type PartialDeep<T> = {
+  [P in keyof T]?: T[P] extends object ? PartialDeep<T[P]> : T[P]
+}
 import path from 'path'
 
 import { BotpressConfig } from './botpress.config'

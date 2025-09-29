@@ -166,7 +166,7 @@ class Bench {
 
   getSocketId = async (userId: string): Promise<string> => {
     if (this.webUserSockets[userId]) {
-      return this.webUserSockets[userId].id
+      return this.webUserSockets[userId].id!
     }
 
     const socket = io(`${this.url}/guest`, {
@@ -187,7 +187,7 @@ class Bench {
       payload: { type: 'visit', text: 'User visit', timezone: 0, language: 'en' }
     })
 
-    return socket.id
+    return socket.id!
   }
 
   async sendWebMessage(userId: string, index: number) {

@@ -15,7 +15,7 @@ class LogsRouter extends CustomAdminRouter {
       '/bots/:botId',
       this.needPermissions('read', 'bot.logs'),
       this.asyncMiddleware(async (req, res) => {
-        const limit = req.query.limit
+        const limit = req.query.limit ? Number(req.query.limit) : undefined
         const botId = req.params.botId
         const logs = await this.logsRepository.getByBot(botId, limit)
         res.send(logs)
@@ -51,8 +51,8 @@ class LogsRouter extends CustomAdminRouter {
           return res.status(400).send('fromDate and toDate must be specified')
         }
 
-        const from = moment(parseInt(fromDate || ''))
-        const to = moment(parseInt(toDate || ''))
+        const from = moment(parseInt(typeof fromDate === 'string' ? fromDate : ''))
+        const to = moment(parseInt(typeof toDate === 'string' ? toDate : ''))
 
         if (!from.isValid() || !to.isValid()) {
           return res.status(400).send('fromDate and toDate must be a valid unix timestamp')

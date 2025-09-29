@@ -22,7 +22,7 @@ export class LoggerFilePersister {
   constructor() {}
 
   async initialize(botpressConfig: BotpressConfig, logger: Logger) {
-    const logsConfig = _.get(botpressConfig, 'logs.fileOutput', {})
+    const logsConfig = _.get(botpressConfig, 'logs.fileOutput', {}) as any
     if (!logsConfig.enabled) {
       return
     }

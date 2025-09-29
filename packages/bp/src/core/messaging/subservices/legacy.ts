@@ -2,6 +2,7 @@ import * as sdk from 'botpress/sdk'
 import { HTTPServer } from 'core/app/server'
 import { Router } from 'express'
 import { createProxyMiddleware } from 'http-proxy-middleware'
+import { URL } from 'url'
 
 // TODO: remove this code when we decide to break compatibility with legacy channel routes
 export class MessagingLegacy {

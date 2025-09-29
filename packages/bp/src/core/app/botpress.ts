@@ -148,8 +148,11 @@ export class Botpress {
   async restoreDebugScope() {
     if (await this.ghostService.global().fileExists('/', 'debug.json')) {
       try {
-        const { scopes } = await this.ghostService.global().readFileAsObject('/', 'debug.json')
-        setDebugScopes(scopes.join(','))
+        const debugData = await this.ghostService.global().readFileAsObject('/', 'debug.json')
+        const scopes = (debugData as any)?.scopes
+        if (Array.isArray(scopes)) {
+          setDebugScopes(scopes.join(','))
+        }
       } catch (err) {
         this.logger.attachError(err).error("Couldn't load debug scopes. Check the syntax of debug.json")
       }

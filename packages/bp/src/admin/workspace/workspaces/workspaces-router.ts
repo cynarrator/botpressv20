@@ -1,5 +1,6 @@
 import { AdminServices } from 'admin/admin-router'
 import { CustomAdminRouter } from 'admin/utils/customAdminRouter'
+import * as sdk from 'botpress/sdk'
 import { defaultPipelines } from 'common/defaults'
 import { CreateWorkspace, Workspace } from 'common/typings'
 import { PipelineSchema, WorkspaceCreationSchema } from 'common/validation'
@@ -144,11 +145,13 @@ class WorkspacesRouter extends CustomAdminRouter {
       this.asyncMiddleware(async (req, res) => {
         const { workspaceId, rolloutStrategy } = req.params
 
-        if (!ROLLOUT_STRATEGIES.includes(rolloutStrategy)) {
+        if (!ROLLOUT_STRATEGIES.includes(rolloutStrategy as any)) {
           throw new InvalidOperationError(`Unknown strategy "${rolloutStrategy}"`)
         }
 
-        await this.workspaceService.mergeWorkspaceConfig(workspaceId, { rolloutStrategy })
+        await this.workspaceService.mergeWorkspaceConfig(workspaceId, {
+          rolloutStrategy: rolloutStrategy as sdk.RolloutStrategy
+        })
         res.sendStatus(200)
       })
     )

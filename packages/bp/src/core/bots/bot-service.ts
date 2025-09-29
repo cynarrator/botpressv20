@@ -399,8 +399,19 @@ export class BotService {
       approvals.push({ email: requestedBy, strategy: userStrategy })
     }
 
+    const existingStageRequest = botConfig.pipeline_status.stage_request
     const newConfig = await this.configProvider.mergeBotConfig(botId, {
-      pipeline_status: { stage_request: { approvals } }
+      pipeline_status: {
+        stage_request: {
+          requested_on: existingStageRequest?.requested_on || new Date(),
+          status: existingStageRequest?.status || 'pending',
+          requested_by: existingStageRequest?.requested_by || requestedBy,
+          id: existingStageRequest?.id || `${botId}_${Date.now()}`,
+          approvals,
+          ...(existingStageRequest?.expires_on && { expires_on: existingStageRequest.expires_on }),
+          ...(existingStageRequest?.message && { message: existingStageRequest.message })
+        }
+      }
     })
     await this._executeStageChangeHooks(botConfig, newConfig)
   }

@@ -23,7 +23,8 @@ class CollaboratorsRouter extends CustomAdminRouter {
       '/',
       this.needPermissions('read', this.resource),
       this.asyncMiddleware(async (req, res) => {
-        const filterRoles = req.query.roles && req.query.roles.split(',')
+        const filterRoles =
+          req.query.roles && typeof req.query.roles === 'string' ? req.query.roles.split(',') : undefined
         const attributes = ['last_logon', 'firstname', 'lastname', 'picture_url', 'created_at']
         const users = await this.workspaceService.getWorkspaceUsers(req.workspace!, { attributes })
 
@@ -40,7 +41,7 @@ class CollaboratorsRouter extends CustomAdminRouter {
       '/listAvailableUsers',
       this.needPermissions('read', this.resource),
       this.asyncMiddleware(async (req, res) => {
-        const filterRoles = req.query.roles?.split(',') || []
+        const filterRoles = req.query.roles && typeof req.query.roles === 'string' ? req.query.roles.split(',') : []
         const filterAuthStrategies = (await this.workspaceService.findWorkspace(req.workspace!)).authStrategies || []
 
         // When adding a collaborator, we do not use the roles filter since the user may not be in any workspace yet

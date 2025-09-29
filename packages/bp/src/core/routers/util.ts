@@ -142,5 +142,5 @@ export interface TypedRequest<T> extends Request {
 }
 
 export interface TypedResponse<T> extends Response {
-  send: (body: T) => TypedResponse<T>
+  send: (body: T) => this
 }

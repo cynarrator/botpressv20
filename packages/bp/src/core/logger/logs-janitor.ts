@@ -47,7 +47,11 @@ export class LogsJanitor extends Janitor {
     await Promise.mapSeries(botsIds, botId => {
       const botConfig = botsConfigs.get(botId)!
       const expiration = moment()
-        .subtract(ms(_.get(botConfig, 'logs.expiration') || globalLogsExpiryTime))
+        .subtract(
+          _.get(botConfig, 'logs.expiration')
+            ? ms(_.get(botConfig, 'logs.expiration') as string | number as any)
+            : globalLogsExpiryTime
+        )
         .toDate()
       return this.logsRepository.deleteBeforeDate(botId, expiration)
     })

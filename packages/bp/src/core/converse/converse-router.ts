@@ -56,18 +56,18 @@ export class ConverseRouter extends CustomRouter {
         const { userId, botId } = req.params
         const params = req.query.include
 
-        if (params && params.toLowerCase() !== 'responses') {
+        if (params && typeof params === 'string' && params.toLowerCase() !== 'responses') {
           return res.status(403).send('Unauthenticated converse API can only return "responses"')
         }
 
         const rawOutput = await this.converseService.sendMessage(
-          botId,
-          userId,
+          botId!,
+          userId!,
           _.omit(req.body, ['includedContexts']),
           req.credentials,
           req.body.includedContexts || ['global']
         )
-        const formatedOutput = this.prepareResponse(rawOutput, params)
+        const formatedOutput = this.prepareResponse(rawOutput, params as any)
 
         return res.json(formatedOutput)
       })
@@ -86,13 +86,16 @@ export class ConverseRouter extends CustomRouter {
         const { userId, botId } = req.params
 
         const rawOutput = await this.converseService.sendMessage(
-          botId,
-          userId,
+          botId!,
+          userId!,
           _.omit(req.body, ['includedContexts']),
           req.credentials,
           req.body.includedContexts || ['global']
         )
-        const formatedOutput = this.prepareResponse(rawOutput, req.query.include)
+        const formatedOutput = this.prepareResponse(
+          rawOutput,
+          typeof req.query.include === 'string' ? req.query.include : undefined as any
+        )
 
         return res.json(formatedOutput)
       })

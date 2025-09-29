@@ -123,7 +123,8 @@ export class ActionStrategy implements InstructionStrategy {
       if (!actionServerId) {
         const hasAction = await service.hasAction(actionName)
         if (!hasAction) {
-          const { currentNode, currentFlow } = _.get(event, 'state.context', {})
+          const context = _.get(event, 'state.context', {}) as any
+          const { currentNode, currentFlow } = context
           throw new Error(`Action "${actionName}" not found in ${currentFlow}:${currentNode}`)
         }
       }
@@ -131,7 +132,8 @@ export class ActionStrategy implements InstructionStrategy {
       await service.runAction({ actionName, incomingEvent: event, actionArgs: args, actionServer })
     } catch (err) {
       this.logger.attachError(err).error(err.message)
-      const { currentNode, currentFlow } = _.get(event, 'state.context', {})
+      const context = _.get(event, 'state.context', {}) as any
+      const { currentNode, currentFlow } = context
       addErrorToEvent(
         {
           type: 'action-execution',

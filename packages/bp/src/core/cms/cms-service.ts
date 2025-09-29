@@ -563,7 +563,7 @@ export class CMSService implements IDisposeOnExit {
 
   // This methods finds the translated property and returns the original properties
   private getOriginalProps(formData: object, contentType: ContentType, lang: string, defaultLang?: string) {
-    const originalProps = Object.keys(_.get(contentType, 'jsonSchema.properties'))
+    const originalProps = Object.keys(_.get(contentType, 'jsonSchema.properties') || {})
 
     // When data is accessible through a single key containing the '$' separator. e.g. { 'text$en': '...' }
     const separatorExtraction = (prop: string) =>

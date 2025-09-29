@@ -232,8 +232,8 @@ export class ScopedFlowService {
       unplacedIndex = position ? unplacedIndex : unplacedIndex + 1
       return {
         ...node,
-        x: position ? position.x : MIN_POS_X + unplacedIndex * PLACING_STEP,
-        y: position ? position.y : (_.maxBy(flow.nodes, 'y') || { y: 0 })['y'] + PLACING_STEP
+        x: position ? (position as any).x : MIN_POS_X + unplacedIndex * PLACING_STEP,
+        y: position ? (position as any).y : ((_.maxBy(flow.nodes, 'y') as any) || { y: 0 })['y'] + PLACING_STEP
       }
     })
 
