@@ -114,7 +114,7 @@
   },
   "optionalDependencies": {
     "ioredis": "^4.28.5",
-    "sqlite3": "4.2.0"
+    "sqlite3": "^5.1.6"
   },
   "husky": {
     "hooks": {
