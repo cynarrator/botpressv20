@@ -5,14 +5,17 @@
     "strict": true,
     "module": "commonjs",
     "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
     "resolveJsonModule": true,
-    "target": "es2019",
+    "target": "es2022",
+    "lib": ["es2022"],
     "noImplicitAny": false,
     "moduleResolution": "node",
     "experimentalDecorators": true,
     "baseUrl": "./src",
     "outDir": "./dist",
-    "types": [],
-    "useUnknownInCatchVariables": false
+    "types": ["node"],
+    "useUnknownInCatchVariables": false,
+    "skipLibCheck": true
   }
 }
