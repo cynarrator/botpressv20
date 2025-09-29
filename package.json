@@ -3,7 +3,7 @@
   "version": "12.31.8",
   "description": "The world's most powerful conversational engine",
   "engines": {
-    "node": "^12"
+    "node": "^20"
   },
   "main": "index.js",
   "repository": "https://github.com/botpress/v12.git",
