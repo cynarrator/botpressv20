@@ -160,6 +160,9 @@ function writeStats(err, stats, exitOnError = true, callback?, moduleName?: stri
 export function watch(projectPath: string) {
   const confs = config(projectPath)
   const compiler = webpack(confs)
+  if (!compiler) {
+    throw new Error('Failed to create webpack compiler')
+  }
   compiler.watch({}, (err, stats) => writeStats(err, stats, false, undefined, path.basename(projectPath)))
 }
 
