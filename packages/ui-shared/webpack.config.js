@@ -61,16 +61,17 @@ const config = {
           {
             loader: 'css-loader',
             options: {
-              modules: true,
+              modules: {
+                localIdentName: '[name]__[local]___[hash:base64:5]'
+              },
               url: false,
-              importLoaders: 1,
-              localIdentName: '[name]__[local]___[hash:base64:5]'
+              importLoaders: 1
             }
           },
           {
             loader: 'postcss-loader',
             options: {
-              options: {}
+              postcssOptions: {}
             }
           },
           { loader: 'sass-loader' }
