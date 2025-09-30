@@ -14,7 +14,8 @@
     "moduleResolution": "node",
     "target": "es6",
     "lib": ["es7"],
-    "types": ["reflect-metadata", "bluebird-global"],
+    "skipLibCheck": true,
+    "types": [],
     "paths": {
       "common/*": ["../../packages/bp/src/common/*"],
       "botpress/sdk": ["../../packages/bp/src/sdk/botpress.d.ts"]
