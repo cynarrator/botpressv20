@@ -1,7 +1,7 @@
 const path = require('path')
 const gulp = require('gulp')
 const ts = require('gulp-typescript')
-const sourcemaps = require('gulp-sourcemaps')
+// const sourcemaps = require('gulp-sourcemaps') // Disabled to avoid WASM issues
 const gulpif = require('gulp-if')
 const run = require('gulp-run')
 const file = require('gulp-file')
@@ -41,20 +41,14 @@ const clearMigrations = () => {
   return gulp.src('./packages/bp/dist/migrations/*.*', { allowEmpty: true }).pipe(gulpRimraf())
 }
 
-const tsProject = ts.createProject(path.resolve(__dirname, '../packages/bp/tsconfig.json'))
+const tsProject = ts.createProject(path.resolve(__dirname, '../packages/bp/tsconfig.json'), {
+  declaration: false,
+  sourceMap: false
+})
 const compileTypescript = () => {
   return tsProject
     .src()
-    .pipe(sourcemaps.init())
     .pipe(tsProject())
-    .pipe(
-      sourcemaps.write({
-        sourceRoot: file => {
-          const sourceFile = path.join(file.cwd, 'src', file.sourceMap.file)
-          return path.relative(path.dirname(sourceFile), file.cwd)
-        }
-      })
-    )
     .pipe(gulp.dest('./packages/bp/dist'))
 }
 
