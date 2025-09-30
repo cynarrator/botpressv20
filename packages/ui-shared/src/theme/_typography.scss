@@ -3,6 +3,7 @@
 // Copyright 2015 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
+@use "sass:math";
 @import 'common/variables';
 @import 'common/mixins';
 @import '../../../../node_modules/@blueprintjs/icons/src/blueprint-icons';
@@ -357,7 +358,7 @@ Styleguide preformatted
   font-size: $pt-font-size-small;
 
   #{$icon-classes} {
-    margin-right: $pt-grid-size / 2;
+    margin-right: math.div($pt-grid-size, 2);
   }
 
   .#{$ns}-dark & {
@@ -426,13 +427,13 @@ Styleguide lists
   padding-left: $pt-grid-size * 3;
 
   li:not(:last-child) {
-    margin-bottom: $pt-grid-size / 2;
+    margin-bottom: math.div($pt-grid-size, 2);
   }
 
   // nested lists
   ol,
   ul {
-    margin-top: $pt-grid-size / 2;
+    margin-top: math.div($pt-grid-size, 2);
   }
 }
 
