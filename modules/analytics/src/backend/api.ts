@@ -1,5 +1,6 @@
 import * as sdk from 'botpress/sdk'
-import { asyncMiddleware as asyncMw, StandardError } from 'common/http'
+import { asyncMiddleware as asyncMw, StandardError, BPRequest } from 'common/http'
+import { Request, Response } from 'express'
 import _ from 'lodash'
 import moment from 'moment'
 
@@ -19,13 +20,13 @@ export default (bp: typeof sdk, db: Database) => {
 
   router.get(
     '/channel/:channel',
-    asyncMiddleware(async (req, res) => {
+    asyncMiddleware(async (req: BPRequest, res: Response) => {
       const { botId, channel } = req.params
       const { start, end } = req.query
 
       try {
-        const startDate = unixToDate(start)
-        const endDate = unixToDate(end)
+        const startDate = unixToDate(start as string)
+        const endDate = unixToDate(end as string)
         const metrics = await db.getMetrics(botId, { startDate, endDate, channel })
         res.send({ metrics })
       } catch (err) {
@@ -34,13 +35,13 @@ export default (bp: typeof sdk, db: Database) => {
     })
   )
 
-  router.get('/custom_metrics/:name', async (req, res) => {
+  router.get('/custom_metrics/:name', async (req: BPRequest, res: Response) => {
     try {
       const { botId, name } = req.params
       const { start, end } = req.query
 
-      const startDate = start ? moment(start).toDate() : moment().toDate()
-      const endDate = end ? moment(end).toDate() : moment().toDate()
+      const startDate = start ? moment(start as string).toDate() : moment().toDate()
+      const endDate = end ? moment(end as string).toDate() : moment().toDate()
 
       const metrics = await db.getMetric(botId, '', getCustomMetricName(name), {
         startDate,
@@ -52,7 +53,7 @@ export default (bp: typeof sdk, db: Database) => {
     }
   })
 
-  router.post('/custom_metrics/:name/:method', async (req, res) => {
+  router.post('/custom_metrics/:name/:method', async (req: BPRequest, res: Response) => {
     try {
       const { botId, method, name } = req.params
       const { count, date } = req.body
@@ -79,8 +80,9 @@ export default (bp: typeof sdk, db: Database) => {
     }
   })
 
-  const unixToDate = unix => {
-    const momentDate = moment.unix(unix)
+  const unixToDate = (unix: string | number) => {
+    const unixNumber = typeof unix === 'string' ? parseInt(unix, 10) : unix
+    const momentDate = moment.unix(unixNumber)
     if (!momentDate.isValid()) {
       throw new Error(`Invalid unix timestamp format ${unix}.`)
     }
