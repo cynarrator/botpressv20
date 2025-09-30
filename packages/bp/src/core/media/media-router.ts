@@ -33,14 +33,14 @@ export class MediaRouter extends CustomRouter {
     super('Media', logger, Router({ mergeParams: true }))
     this.checkTokenHeader = checkTokenHeader(this.authService, TOKEN_AUDIENCE)
     this.checkPermissions = needPermissions(this.workspaceService)
-    this.fileMulter = fileUploadMulter(DEFAULT_MIME_TYPES, DEFAULT_MAX_SIZE)
+    this.fileMulter = fileUploadMulter(DEFAULT_MIME_TYPES, DEFAULT_MAX_SIZE) as any
     this.setupPublicRoutes()
     this.setupPrivateRoutes()
   }
 
   async initialize() {
     const { allowedMimeTypes, maxFileSize } = (await this.configProvider.getBotpressConfig()).fileUpload
-    this.fileMulter = fileUploadMulter(allowedMimeTypes, maxFileSize)
+    this.fileMulter = fileUploadMulter(allowedMimeTypes, maxFileSize) as any
   }
 
   private setupPublicRoutes() {

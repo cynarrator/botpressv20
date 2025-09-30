@@ -101,7 +101,7 @@ export const loadUser = (authService: AuthService) => async (req: Request, res: 
  * @example fileUploadMulter(['image/*', 'audio/mpeg'], '150mb)
  * fileUploadMulter(['*'], '1gb)
  */
-export const fileUploadMulter = (allowedMimeTypes: string[] = [], maxFileSize?: string) => {
+export const fileUploadMulter = (allowedMimeTypes: string[] = [], maxFileSize?: string): any => {
   const allowedMimeTypesRegex = allowedMimeTypes.map(mimeType => {
     // '*' is not a valid regular expression
     if (mimeType.includes('*')) {

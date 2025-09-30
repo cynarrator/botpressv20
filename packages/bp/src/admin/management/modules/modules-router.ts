@@ -19,7 +19,7 @@ class ModulesRouter extends CustomAdminRouter {
     this.router.post(
       '/upload',
       assertSuperAdmin,
-      multer().single('file'),
+      multer().single('file') as any,
       this.asyncMiddleware(async (req, res) => {
         const file = req['file'].buffer
 

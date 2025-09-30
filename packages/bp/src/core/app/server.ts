@@ -144,7 +144,7 @@ export class HTTPServer {
     this.app.use(debugRequestMw)
 
     if (!yn(process.core_env.BP_HTTP_DISABLE_GZIP)) {
-      this.app.use(compression())
+      this.app.use(compression() as any)
     }
 
     this.modulesRouter = new ModulesRouter(
@@ -331,7 +331,7 @@ export class HTTPServer {
           httpOnly: true,
           domain: config.externalUrl,
           maxAge: ms(config.session.maxAge)
-        })
+        }) as any
       )
     }
 
