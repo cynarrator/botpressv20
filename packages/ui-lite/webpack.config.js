@@ -25,6 +25,18 @@ const config = {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
       common: path.resolve(__dirname, '../bp/dist/common')
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      util: require.resolve('util'),
+      buffer: require.resolve('buffer'),
+      process: require.resolve('process/browser'),
+      fs: false,
+      net: false,
+      tls: false
     }
   },
   optimization: {
@@ -55,6 +67,10 @@ const config = {
   },
   externals: {},
   plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser'
+    }),
     new HtmlWebpackPlugin({
       inject: true,
       hash: true,

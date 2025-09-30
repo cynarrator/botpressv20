@@ -12,6 +12,12 @@ const config = {
   mode: isProduction ? 'production' : 'development',
   bail: true,
   devtool: process.argv.find(x => x.toLowerCase() === '--nomap') ? false : 'source-map',
+  plugins: [
+    new webpack.ProvidePlugin({
+      Buffer: ['buffer', 'Buffer'],
+      process: 'process/browser'
+    })
+  ],
   entry: ['./src/index.tsx'],
   output: {
     path: path.resolve(__dirname, './dist'),
@@ -22,6 +28,18 @@ const config = {
     alias: {
       '~': path.resolve(__dirname, './src'),
       common: path.resolve(__dirname, '../bp/dist/common')
+    },
+    fallback: {
+      path: require.resolve('path-browserify'),
+      os: require.resolve('os-browserify/browser'),
+      crypto: require.resolve('crypto-browserify'),
+      stream: require.resolve('stream-browserify'),
+      util: require.resolve('util'),
+      buffer: require.resolve('buffer'),
+      process: require.resolve('process/browser'),
+      fs: false,
+      net: false,
+      tls: false
     }
   },
   externals: {
