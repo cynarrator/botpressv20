@@ -4,8 +4,8 @@
   "private": true,
   "publisher": "botpress",
   "scripts": {
-    "watch": "node ./webpack.config.js --watch",
-    "build": "cross-env NODE_ENV=production node ./webpack.config.js --compile"
+    "watch": "node --openssl-legacy-provider ./webpack.config.js --watch",
+    "build": "cross-env NODE_ENV=production node --openssl-legacy-provider ./webpack.config.js --compile"
   },
   "devDependencies": {
     "@types/react": "^16.8.6",
