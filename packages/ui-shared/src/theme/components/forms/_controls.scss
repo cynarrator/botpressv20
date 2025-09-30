@@ -1,9 +1,9 @@
 // Copyright 2015 Palantir Technologies, Inc. All rights reserved.
 // Licensed under the Apache License, Version 2.0.
 
-@import "../../common/mixins";
-@import "../../common/variables";
-@import "../button/common";
+@import '../../common/mixins';
+@import '../../common/variables';
+@import '../button/common';
 
 $control-background-color: $button-background-color !default;
 $control-background-color-hover: $button-background-color-hover !default;
@@ -12,15 +12,15 @@ $dark-control-background-color: $dark-button-background-color !default;
 $dark-control-background-color-hover: $dark-button-background-color-hover !default;
 $dark-control-background-color-active: $dark-button-background-color-active !default;
 
-$control-checked-background-color: nth(map-get($button-intents, "primary"), 1) !default;
-$control-checked-background-color-hover: nth(map-get($button-intents, "primary"), 2) !default;
-$control-checked-background-color-active: nth(map-get($button-intents, "primary"), 3) !default;
+$control-checked-background-color: nth(map-get($button-intents, 'primary'), 1) !default;
+$control-checked-background-color-hover: nth(map-get($button-intents, 'primary'), 2) !default;
+$control-checked-background-color-active: nth(map-get($button-intents, 'primary'), 3) !default;
 
 $control-indicator-size: $pt-icon-size-standard !default;
 $control-indicator-size-large: $pt-icon-size-large !default;
 $control-indicator-spacing: $pt-grid-size !default;
 
-@mixin control-checked-colors($selector: ":checked") {
+@mixin control-checked-colors($selector: ':checked') {
   input#{$selector} ~ .#{$ns}-control-indicator {
     box-shadow: $button-intent-box-shadow;
     background-color: $control-checked-background-color;
@@ -136,7 +136,7 @@ $control-indicator-spacing: $pt-grid-size !default;
       display: block;
       width: 1em;
       height: 1em;
-      content: "";
+      content: '';
     }
   }
 
@@ -202,27 +202,25 @@ $control-indicator-spacing: $pt-grid-size !default;
   */
 
   &.#{$ns}-checkbox {
-    @mixin indicator-inline-icon($icon) {
-      &::before {
-        // embed SVG icon image as backgroud-image above gradient.
-        // the SVG image content is inlined into the CSS, so use this sparingly.
-        background-image: svg-icon("16px/#{$icon}.svg", (path: (fill: $white)));
-      }
-    }
-
     // make :indeterminate look like :checked _for Checkbox only_
-    @include control-checked-colors(":indeterminate");
+    @include control-checked-colors(':indeterminate');
 
     .#{$ns}-control-indicator {
       border-radius: $pt-border-radius;
     }
 
-    input:checked ~ .#{$ns}-control-indicator {
-      @include indicator-inline-icon("small-tick");
+    input:checked ~ .#{$ns}-control-indicator::before {
+      font-family: $icons16-family;
+      font-size: $pt-icon-size-standard;
+      color: $white;
+      content: $pt-icon-small-tick;
     }
 
-    input:indeterminate ~ .#{$ns}-control-indicator {
-      @include indicator-inline-icon("small-minus");
+    input:indeterminate ~ .#{$ns}-control-indicator::before {
+      font-family: $icons16-family;
+      font-size: $pt-icon-size-standard;
+      color: $white;
+      content: $pt-icon-small-minus;
     }
   }
 
@@ -345,7 +343,7 @@ $control-indicator-spacing: $pt-grid-size !default;
     }
 
     @include indicator-colors(
-      "",
+      '',
       $switch-background-color,
       $switch-background-color-hover,
       $switch-background-color-active,
@@ -353,7 +351,7 @@ $control-indicator-spacing: $pt-grid-size !default;
       $switch-indicator-background-color-disabled
     );
     @include indicator-colors(
-      ":checked",
+      ':checked',
       $switch-checked-background-color,
       $switch-checked-background-color-hover,
       $switch-checked-background-color-active,
@@ -397,7 +395,7 @@ $control-indicator-spacing: $pt-grid-size !default;
 
     .#{$ns}-dark & {
       @include indicator-colors(
-        "",
+        '',
         $dark-switch-background-color,
         $dark-switch-background-color-hover,
         $dark-switch-background-color-active,
@@ -405,7 +403,7 @@ $control-indicator-spacing: $pt-grid-size !default;
         $dark-switch-indicator-background-color-disabled
       );
       @include indicator-colors(
-        ":checked",
+        ':checked',
         $dark-switch-checked-background-color,
         $dark-switch-checked-background-color-hover,
         $dark-switch-checked-background-color-active,
