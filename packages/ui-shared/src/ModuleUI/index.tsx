@@ -25,7 +25,6 @@ import {
   ItemListProps,
   KeyboardShortcutsProps,
   SearchBarProps,
-  SectionAction,
   SidePanelProps,
   SidePanelSectionProps,
   SplashScreenProps,
@@ -33,6 +32,7 @@ import {
   ToolbarProps,
   ElementPreviewProps
 } from './typings'
+import type { SectionAction } from './typings'
 import { buildMenu, showContextMenu } from './utils'
 
 // Copied from ui-studio
