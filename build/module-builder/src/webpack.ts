@@ -79,9 +79,10 @@ export function config(projectPath) {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: `${packageJson.name}__[name]__[local]___[hash:base64:5]`
+                modules: {
+                  localIdentName: `${packageJson.name}__[name]__[local]___[hash:base64:5]`
+                },
+                importLoaders: 1
               }
             },
             { loader: 'sass-loader' }

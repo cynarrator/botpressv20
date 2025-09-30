@@ -43,9 +43,10 @@ module.exports = function(options) {
             {
               loader: 'css-loader',
               options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: pkg.name + '__[name]__[local]___[hash:base64:5]'
+                modules: {
+                  localIdentName: pkg.name + '__[name]__[local]___[hash:base64:5]'
+                },
+                importLoaders: 1
               }
             },
             { loader: 'sass-loader' }
