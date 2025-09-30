@@ -8,8 +8,8 @@
     "node": "^20"
   },
   "scripts": {
-    "watch": "node ./webpack.config.js --watch",
-    "build": "cross-env NODE_ENV=production node ./webpack.config.js --compile --nomap && yarn scss",
+    "watch": "node --openssl-legacy-provider ./webpack.config.js --watch",
+    "build": "cross-env NODE_ENV=production node --openssl-legacy-provider ./webpack.config.js --compile --nomap && yarn scss",
     "scss": "sass src/theme/main.scss dist/theme.css"
   },
   "devDependencies": {
