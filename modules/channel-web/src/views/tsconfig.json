@@ -3,6 +3,6 @@
   "compilerOptions": {
     "baseUrl": "./",
     "typeRoots": ["../../node_modules/@types", "lite/typings.d.ts"],
-    "types": ["jest", "bluebird-global", "dom-mediacapture-record"]
+    "types": ["bluebird-global", "dom-mediacapture-record"]
   }
 }
