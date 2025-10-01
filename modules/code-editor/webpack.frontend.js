@@ -7,6 +7,16 @@ module.exports = ({ full, lite }) => {
       ...full.output,
       publicPath: 'assets/modules/code-editor/web/'
     },
+    resolve: {
+      ...full.resolve,
+      fallback: {
+        ...full.resolve?.fallback,
+        path: require.resolve('path-browserify'),
+        crypto: require.resolve('crypto-browserify'),
+        stream: require.resolve('stream-browserify'),
+        vm: false
+      }
+    },
     module: {
       ...full.module,
       rules: [
