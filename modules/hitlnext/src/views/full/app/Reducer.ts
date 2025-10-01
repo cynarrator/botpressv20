@@ -46,7 +46,7 @@ const Reducer = (state: IState, action: ActionType): IState => {
         // Note: because currentAgent is an actual object,
         // instead of a reference, it must be manually updated
         if (state.currentAgent.agentId === action.payload.id) {
-          draft.currentAgent = draft.agents[action.payload.id]
+          draft.currentAgent = draft.agents[action.payload.id] as any
         }
       })
     case 'setHandoff':
