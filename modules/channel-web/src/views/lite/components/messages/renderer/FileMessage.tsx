@@ -1,5 +1,4 @@
 import mimeTypes from 'mime/lite'
-import path from 'path'
 import React from 'react'
 
 import { Renderer } from '../../../typings'
@@ -16,11 +15,11 @@ export const FileMessage = (props: Renderer.FileMessage) => {
   let extension = ''
   try {
     const validUrl = new URL(url)
-
     extension = validUrl.pathname
   } catch (error) {
-    // Try using path.extname since url might be relative.
-    extension = path.extname(url)
+    // Try extracting extension from relative URL
+    const lastDotIndex = url.lastIndexOf('.')
+    extension = lastDotIndex !== -1 ? url.substring(lastDotIndex) : ''
   }
 
   const mime = mimeTypes.getType(extension)
