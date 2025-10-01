@@ -9,9 +9,9 @@ export default async (bp: SDK, db: Database) => {
 
   router.get('/sessions', async (req, res) => {
     const pausedOnly = req.query.pausedOnly === 'true'
-    const sessionIds = req.query.searchText && (await db.searchSessions(req.query.searchText))
+    const sessionIds = req.query.searchText && (await db.searchSessions(req.query.searchText as any))
 
-    res.send(await db.getAllSessions(pausedOnly, req.params.botId, sessionIds))
+    res.send(await db.getAllSessions(pausedOnly, (req.params as any).botId, sessionIds))
   })
 
   router.get('/sessions/:sessionId', async (req, res) => {
@@ -32,7 +32,7 @@ export default async (bp: SDK, db: Database) => {
         channel: session.channel,
         target: session.userId,
         threadId: session.threadId,
-        botId: req.params.botId,
+        botId: (req.params as any).botId,
         direction: 'outgoing',
         payload: {
           agent: true,
@@ -50,9 +50,9 @@ export default async (bp: SDK, db: Database) => {
   })
 
   router.post('/channel/:channel/user/:userId/isPaused', async (req, res) => {
-    const { botId, channel, userId } = req.params
+    const { botId, channel, userId } = req.params as any
     const { threadId } = req.query
-    res.send(await db.isSessionPaused({ botId, channel, userId, threadId }))
+    res.send(await db.isSessionPaused({ botId, channel, userId, threadId: threadId as any }))
   })
 
   const changePauseState = async (isPaused: boolean, targetUser: SessionIdentity, trigger: string = 'operator') => {
@@ -62,24 +62,24 @@ export default async (bp: SDK, db: Database) => {
   }
 
   router.post('/sessions/:sessionId/:action', async (req, res) => {
-    const { sessionId, action, trigger } = req.params
+    const { sessionId, action, trigger } = req.params as any
     await changePauseState(action === 'pause', { sessionId }, trigger)
     res.sendStatus(200)
   })
 
   router.post('/channel/:channel/user/:userId/:action', async (req, res) => {
-    const { botId, channel, userId, action, trigger } = req.params
+    const { botId, channel, userId, action, trigger } = req.params as any
     const { threadId } = req.query
-    await changePauseState(action === 'pause', { botId, channel, userId, threadId }, trigger)
+    await changePauseState(action === 'pause', { botId, channel, userId, threadId: threadId as any }, trigger)
     res.sendStatus(200)
   })
 
   router.get('/config/attributes', async (req, res) => {
     try {
-      const config = (await bp.config.getModuleConfigForBot('hitl', req.params.botId)) as Config
+      const config = (await bp.config.getModuleConfigForBot('hitl', (req.params as any).botId)) as Config
       res.send(config.attributes)
     } catch (err) {
-      res.status(400).send(`Can't find attributes: ${err.message}`)
+      res.status(400).send(`Can't find attributes: ${(err as any).message}`)
     }
   })
 }
