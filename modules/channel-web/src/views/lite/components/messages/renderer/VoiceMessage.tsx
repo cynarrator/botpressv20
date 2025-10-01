@@ -1,5 +1,4 @@
 import mimeTypes from 'mime/lite'
-import path from 'path'
 import React, { FC, useRef, useEffect } from 'react'
 
 import { Renderer } from '../../../typings'
@@ -28,7 +27,8 @@ export const VoiceMessage: FC<Props> = (props: Props) => {
 
   const { audio } = props.file
 
-  const extension = path.extname(audio)
+  const lastDotIndex = audio.lastIndexOf('.')
+  const extension = lastDotIndex !== -1 ? audio.substring(lastDotIndex) : ''
   const mime = mimeTypes.getType(extension)
 
   return (
