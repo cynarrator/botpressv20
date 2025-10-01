@@ -156,6 +156,7 @@
   "workspaces": [
     "packages/*",
     "build/downloader",
-    "build/module-builder"
+    "build/module-builder",
+    "modules/*"
   ]
 }
