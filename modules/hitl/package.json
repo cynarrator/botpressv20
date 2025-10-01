@@ -28,7 +28,6 @@
   },
   "dependencies": {
     "@botpress/messaging-components": "0.1.0",
-    "bluebird": "^3.5.3",
     "classnames": "^2.2.6",
     "csstype": "^2.2.0",
     "lodash": "^4.17.21",

@@ -1,4 +1,3 @@
-import Bluebird from 'bluebird'
 import * as sdk from 'botpress/sdk'
 import _ from 'lodash'
 
@@ -178,17 +177,17 @@ export default class HitlDb {
       ts: new Date()
     }
 
-    return Bluebird.join(
-      this.knex(TABLE_NAME_MESSAGES).insert({
-        ...message,
-        raw_message: this.knex.json.set(message.raw_message || {}),
-        ts: this.knex.date.now()
-      }),
-      this.knex(TABLE_NAME_SESSIONS)
-        .where({ id: sessionId })
-        .update(this.buildUpdate(direction)),
-      () => toPlainObject(message)
-    )
+    const insertMessage = this.knex(TABLE_NAME_MESSAGES).insert({
+      ...message,
+      raw_message: this.knex.json.set(message.raw_message || {}),
+      ts: this.knex.date.now()
+    })
+
+    const updateSession = this.knex(TABLE_NAME_SESSIONS)
+      .where({ id: sessionId })
+      .update(this.buildUpdate(direction))
+
+    return Promise.all([insertMessage, updateSession]).then(() => toPlainObject(message))
   }
 
   async setSessionPauseState(isPaused: boolean, session: SessionIdentity, trigger: string): Promise<number> {
