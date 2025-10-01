@@ -1,8 +1,21 @@
-import 'bluebird-global'
+// import 'bluebird-global' // Commented out due to missing types
 import * as sdk from 'botpress/sdk'
 import fs from 'fs'
 import _ from 'lodash'
 import path from 'path'
+
+// Helper functions to replace bluebird Promise methods
+const PromiseMapSeries = async <T, R>(items: T[], mapper: (item: T) => Promise<R>): Promise<R[]> => {
+  const results: R[] = []
+  for (const item of items) {
+    results.push(await mapper(item))
+  }
+  return results
+}
+
+const PromiseMap = async <T, R>(items: T[], mapper: (item: T) => Promise<R>): Promise<R[]> => {
+  return Promise.all(items.map(mapper))
+}
 
 import { Config } from '../config'
 
@@ -44,7 +57,7 @@ export default class Editor {
 
     const files: FilesDS = {}
 
-    await Promise.mapSeries(Object.keys(permissions), async type => {
+    await PromiseMapSeries(Object.keys(permissions), async type => {
       const userPermissions = permissions[type]
       if (userPermissions.read) {
         files[type] = await this.loadFiles(userPermissions.type, !userPermissions.isGlobal && this._botId, listBuiltin)
@@ -85,7 +98,7 @@ export default class Editor {
   async loadRawFiles(): Promise<EditableFile[]> {
     const files = await this.bp.ghost.forRoot().directoryListing('/', '*.*', RAW_FILES_FILTERS, true)
 
-    return Promise.map(files, async (filepath: string) => ({
+    return PromiseMap(files, async (filepath: string) => ({
       name: path.basename(filepath),
       type: 'raw' as FileType,
       location: filepath,
@@ -112,7 +125,7 @@ export default class Editor {
     const ghost = botId ? this.bp.ghost.forBot(botId) : this.bp.ghost.forGlobal()
     const files = def.filenames ? def.filenames : await ghost.directoryListing(baseDir, fileExt, excluded, true)
 
-    return Promise.map(files, async (filepath: string) => ({
+    return PromiseMap(files, async (filepath: string) => ({
       name: path.basename(filepath),
       type: fileTypeId as FileType,
       location: filepath,
@@ -125,7 +138,7 @@ export default class Editor {
   private async _getExamples(): Promise<EditableFile[]> {
     const files = await this.bp.ghost.forGlobal().directoryListing('/examples', '*.js')
 
-    return Promise.map(files, async (filepath: string) => {
+    return PromiseMap(files, async (filepath: string) => {
       const isHook = filepath.startsWith('examples/hooks')
       const location = filepath.replace('examples/actions/', '').replace('examples/hooks/', '')
 
@@ -207,7 +220,7 @@ export default class Editor {
       { name: 'es6include.d.ts', location: path.join(__dirname, '/../typings/es6include.txt') }
     ]
 
-    const content = await Promise.mapSeries(files, file => this.readFile(file.name, file.location))
+    const content = await PromiseMapSeries(files, file => this.readFile(file.name, file.location))
     const localTypings = _.mapValues(_.keyBy(content, 'name'), 'fileContent')
 
     this._typings = {
