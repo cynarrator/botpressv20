@@ -125,13 +125,13 @@ export default async (bp: typeof sdk, db: Database) => {
 
   const router = bp.http.createRouterForBot('channel-web', { checkAuthentication: false, enableJsonBodyParser: true })
   const perBotCache = apicache.options({
-    appendKey: (req: Request, _res: Response) => `${req.method} for bot ${req.params?.boId}`,
+    appendKey: (req: Request, _res: any) => `${req.method} for bot ${req.params?.boId}`,
     statusCodes: { include: [200] }
   }).middleware
 
   const assertUserInfo = (options: { convoIdRequired?: boolean } = {}) => async (
     req: ChatRequest,
-    _res: Response,
+    _res: any,
     next: NextFunction
   ) => {
     const { botId } = req.params
@@ -184,7 +184,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.get(
     '/botInfo',
     perBotCache('1 minute'),
-    asyncMiddleware(async (req: BPRequest, res: Response) => {
+    asyncMiddleware(async (req: BPRequest, res: any) => {
       const { botId } = req.params
       const security = ((await bp.config.getModuleConfig('channel-web')) as Config).security // usage of global because a user could overwrite bot scoped configs
       const config = (await bp.config.getModuleConfigForBot('channel-web', botId)) as Config
@@ -214,7 +214,7 @@ export default async (bp: typeof sdk, db: Database) => {
     '/users/customId',
     bp.http.extractExternalToken,
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { botId, userId } = req
       const { customId } = req.body
 
@@ -233,7 +233,7 @@ export default async (bp: typeof sdk, db: Database) => {
     '/messages',
     bp.http.extractExternalToken,
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { botId, userId } = req
 
       const payload = req.body.payload || {}
@@ -257,7 +257,7 @@ export default async (bp: typeof sdk, db: Database) => {
     scopedUpload,
     bp.http.extractExternalToken,
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest & any, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest & any, res: any) => {
       const { botId, userId, conversationId } = req
       const payloadValue = req.body.payload || {}
       const config: Config = await bp.config.getModuleConfigForBot(MODULE_NAME, botId)
@@ -323,7 +323,7 @@ export default async (bp: typeof sdk, db: Database) => {
     '/messages/voice',
     bp.http.extractExternalToken,
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { botId, userId } = req
       const { audio } = req.body
 
@@ -362,7 +362,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/get',
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { conversationId, botId } = req
 
       const config = (await bp.config.getModuleConfigForBot('channel-web', botId)) as Config
@@ -382,7 +382,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/list',
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { userId, botId } = req
 
       await bp.users.getOrCreateUser('web', userId, botId)
@@ -452,7 +452,7 @@ export default async (bp: typeof sdk, db: Database) => {
     '/events',
     bp.http.extractExternalToken,
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { userId, botId } = req
       let { conversationId } = req
 
@@ -483,7 +483,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/saveFeedback',
     bp.http.extractExternalToken,
-    asyncMiddleware(async (req: BPRequest, res: Response) => {
+    asyncMiddleware(async (req: BPRequest, res: any) => {
       const { botId } = req.params
       const { messageId, target, feedback } = req.body
 
@@ -506,7 +506,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/feedbackInfo',
     bp.http.extractExternalToken,
-    asyncMiddleware(async (req: BPRequest, res: Response) => {
+    asyncMiddleware(async (req: BPRequest, res: any) => {
       const { botId } = req.params
       const { target, messageIds } = req.body
 
@@ -523,7 +523,7 @@ export default async (bp: typeof sdk, db: Database) => {
     '/conversations/reset',
     bp.http.extractExternalToken,
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { botId, userId, conversationId } = req
       await bp.users.getOrCreateUser('web', userId, botId)
 
@@ -549,7 +549,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/new',
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { userId } = req
 
       const conversation = await req.messaging.createConversation(userId)
@@ -561,7 +561,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/reference',
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       try {
         const { botId, userId } = req
         const { reference } = req.body
@@ -613,7 +613,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/preferences/get',
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { userId, botId } = req
       const { result } = await bp.users.getOrCreateUser('web', userId, botId)
 
@@ -624,7 +624,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/preferences',
     assertUserInfo(),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { userId, botId } = req
       const payload = req.body || {}
       const preferredLanguage = payload.language
@@ -680,7 +680,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/download/txt',
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { conversationId, botId } = req
 
       const config = (await bp.config.getModuleConfigForBot('channel-web', botId)) as Config
@@ -696,7 +696,7 @@ export default async (bp: typeof sdk, db: Database) => {
   router.post(
     '/conversations/messages/delete',
     assertUserInfo({ convoIdRequired: true }),
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { visitorId, conversationId } = req
 
       bp.realtime.sendPayload(bp.RealTimePayload.forVisitor(visitorId, 'webchat.clear', { conversationId }))
@@ -716,7 +716,7 @@ export default async (bp: typeof sdk, db: Database) => {
   // NOTE : this uses duplicated code taken from public route (ln#624 - ln#636) so it's easy to remove once we can (see prev note)
   privateRouter.post(
     '/conversations/:id/messages/delete',
-    asyncMiddleware(async (req: ChatRequest, res: Response) => {
+    asyncMiddleware(async (req: ChatRequest, res: any) => {
       const { botId } = req.params
       const conversationId = req.params.id
       const { userId } = req.body
