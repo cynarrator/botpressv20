@@ -16,7 +16,8 @@
   "devDependencies": {
     "@types/node": "^10.10.3",
     "@types/uuid": "^8.3.0",
-    "@types/ffmpeg.js": "^3.1.1"
+    "@types/ffmpeg.js": "^3.1.1",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@google-cloud/speech": "^4.5.0",

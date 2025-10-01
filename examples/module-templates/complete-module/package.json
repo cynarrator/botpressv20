@@ -11,5 +11,8 @@
     "watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ../../build/module-builder/bin/entry watch",
     "package": "cross-env NODE_OPTIONS=--openssl-legacy-provider node ../../build/module-builder/bin/entry package"
   },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
   "dependencies": {}
 }

@@ -13,5 +13,8 @@
   "license": "AGPL-3.0-only",
   "dependencies": {
     "react-select": "^2.4.2"
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }

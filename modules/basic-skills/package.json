@@ -21,7 +21,8 @@
   "license": "AGPL-3.0-only",
   "devDependencies": {
     "@babel/helpers": "^7.4.3",
-    "@types/nodemailer": "^6.2.1"
+    "@types/nodemailer": "^6.2.1",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "bluebird": "^3.5.3",

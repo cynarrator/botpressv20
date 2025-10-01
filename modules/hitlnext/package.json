@@ -30,7 +30,9 @@
     "react-avatar": "^3.10.0",
     "yn": "^4.0.0"
   },
-  "devDependencies": {},
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
   "resolutions": {
     "fstream": ">=1.0.12",
     "lodash": ">=4.17.21"

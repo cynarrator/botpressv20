@@ -20,6 +20,9 @@
     "npm": "^6.14.8",
     "tmp": "^0.2.1"
   },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
+  },
   "resolutions": {
     "fstream": ">=1.0.12",
     "lodash": ">=4.17.21"

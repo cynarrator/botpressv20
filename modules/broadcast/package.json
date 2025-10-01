@@ -16,7 +16,8 @@
   "devDependencies": {
     "@blueprintjs/core": "^3.26.1",
     "classnames": "^2.2.5",
-    "core-js": "^2.4.1"
+    "core-js": "^2.4.1",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@blueprintjs/datetime": "^3.17.0",

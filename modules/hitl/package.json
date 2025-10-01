@@ -23,7 +23,8 @@
   "author": "Botpress",
   "license": "AGPL-3.0-only",
   "devDependencies": {
-    "@types/react-bootstrap": "^0.32.19"
+    "@types/react-bootstrap": "^0.32.19",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "@botpress/messaging-components": "0.1.0",

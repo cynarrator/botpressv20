@@ -16,7 +16,8 @@
   "devDependencies": {
     "@types/multer": "1.4.5",
     "monaco-editor-webpack-plugin": "^4.2.0",
-    "webpack": "^4.20.2"
+    "webpack": "^4.20.2",
+    "cross-env": "^7.0.3"
   },
   "dependencies": {
     "jsonlint-mod": "^1.7.5",
