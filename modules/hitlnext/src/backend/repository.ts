@@ -328,9 +328,12 @@ export default class Repository {
       return this.bp.ghost.forGlobal().readFileAsObject<Workspace[]>('/', 'workspaces.json')
     }
 
-    return Promise.map(list(), workspace => {
-      return this.listAgents(workspace.id)
-    }).then(collection =>
+    const workspaces = await list()
+    return Promise.all(
+      workspaces.map(workspace => {
+        return this.listAgents(workspace.id)
+      })
+    ).then(collection =>
       _(collection)
         .flatten()
         .uniqBy('agentId')
@@ -352,15 +355,17 @@ export default class Repository {
       u => u.role === 'admin' || u.role === 'agent'
     ) as sdk.WorkspaceUserWithAttributes[]
 
-    return Promise.map(users, async user => {
-      const agentId = makeAgentId(user.strategy, user.email)
-      const agent = {
-        ...user,
-        agentId
-      }
-      this.agentCache[agentId] = agent
-      return agent
-    })
+    return Promise.all(
+      users.map(async user => {
+        const agentId = makeAgentId(user.strategy, user.email)
+        const agent = {
+          ...user,
+          agentId
+        }
+        this.agentCache[agentId] = agent
+        return agent
+      })
+    )
   }
 
   async getAgent(agentId: string): Promise<Omit<IAgent, 'online'>> {

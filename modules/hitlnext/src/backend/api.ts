@@ -110,12 +110,14 @@ export default async (bp: typeof sdk, state: StateType, repository: Repository) 
     '/agents',
     errorMiddleware(async (req: RequestWithUser, res: Response) => {
       const agents = await repository.listAgents(req.workspace).then(agents => {
-        return Promise.map(agents, async agent => {
-          return {
-            ...agent,
-            online: await repository.getAgentOnline(req.params.botId, agent.agentId)
-          }
-        })
+        return Promise.all(
+          agents.map(async agent => {
+            return {
+              ...agent,
+              online: await repository.getAgentOnline(req.params.botId, agent.agentId)
+            }
+          })
+        )
       })
 
       res.send(agents)
@@ -273,7 +275,7 @@ export default async (bp: typeof sdk, state: StateType, repository: Repository) 
         threadId: handoff.agentThreadId
       }
 
-      await Promise.mapSeries(recentUserConversationEvents.reverse(), async event => {
+      for (const event of recentUserConversationEvents.reverse()) {
         await bp.messaging
           .forBot(handoff.botId)
           .createMessage(
@@ -281,8 +283,8 @@ export default async (bp: typeof sdk, state: StateType, repository: Repository) 
             event.direction === 'incoming' ? undefined : event.target,
             event.event.payload
           )
-        await Bluebird.delay(5)
-      })
+        await new Promise(resolve => setTimeout(resolve, 5))
+      }
 
       await bp.events.sendEvent(
         bp.IO.Event({
