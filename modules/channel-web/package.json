@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "@juggle/resize-observer": "^3.0.2",
-    "apicache": "^1.6.2",
+    "apicache": "^1.6.3",
     "aws-sdk": "^2.905.0",
     "axios": "^0.21.2",
     "bcryptjs": "^2.4.3",
