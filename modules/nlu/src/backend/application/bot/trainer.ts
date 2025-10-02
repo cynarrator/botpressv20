@@ -1,4 +1,3 @@
-import Bluebird from 'bluebird'
 import * as sdk from 'botpress/sdk'
 import _ from 'lodash'
 import { DefinitionsRepository } from '../definitions-repository'
@@ -50,7 +49,7 @@ export class Trainer {
 
   public async unmount() {
     this._needTrainingWatcher.remove()
-    await Bluebird.each(this._languages, this.cancelTraining.bind(this))
+    await Promise.all(this._languages.map(lang => this.cancelTraining(lang)))
     return this._nluClient.pruneModels(this._botId)
   }
 
@@ -118,10 +117,12 @@ export class Trainer {
         return
       }
 
-      await Promise.map(this._languages, async language => {
-        const { status, progress } = await this.syncAndGetState(language)
-        this._webSocket({ status, progress, botId: this._botId, language })
-      })
+      await Promise.all(
+        this._languages.map(async language => {
+          const { status, progress } = await this.syncAndGetState(language)
+          this._webSocket({ status, progress, botId: this._botId, language })
+        })
+      )
     })
   }
 

@@ -1,4 +1,3 @@
-import Bluebird from 'bluebird'
 import * as sdk from 'botpress/sdk'
 import _ from 'lodash'
 import { ModelEntryService } from '../model-entry'
@@ -27,8 +26,8 @@ export class Predictor {
   }
 
   public predict = async (textInput: string, anticipatedLanguage?: string): Promise<EventUnderstanding> => {
-    const allModels = await Bluebird.map(this._languages, l =>
-      this._modelEntryService.get({ botId: this._botId, language: l })
+    const allModels = await Promise.all(
+      this._languages.map(l => this._modelEntryService.get({ botId: this._botId, language: l }))
     )
 
     const models = allModels.filter(isDefined)
