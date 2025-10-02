@@ -83,7 +83,7 @@ export const registerRouter = async (bp: typeof sdk, app: NLUApplication) => {
    * and the fact studio and runtime don't share the same process.
    */
   router.post('/checkForDirtyModels', async (req, res) => {
-    const { botId } = req.params
+    const { botId } = req.params as { botId: string }
     const bot = app.getBot(botId)
     for (const l of bot.languages) {
       const ts = await bot.syncAndGetState(l)
@@ -102,7 +102,7 @@ export const registerRouter = async (bp: typeof sdk, app: NLUApplication) => {
   })
 
   router.get('/training/:language', async (req, res) => {
-    const { language: lang, botId } = req.params
+    const { language: lang, botId } = req.params as { language: string; botId: string }
 
     try {
       const state = await app.getBot(botId).syncAndGetState(lang)
@@ -114,7 +114,7 @@ export const registerRouter = async (bp: typeof sdk, app: NLUApplication) => {
   })
 
   router.post(['/predict', '/predict/:lang'], async (req, res) => {
-    const { botId, lang } = req.params
+    const { botId, lang } = req.params as { botId: string; lang?: string }
     const { error, value } = PredictSchema.validate(req.body)
     if (error) {
       return res.status(400).send('Predict body is invalid')
@@ -140,12 +140,12 @@ export const registerRouter = async (bp: typeof sdk, app: NLUApplication) => {
 
       res.send({ nlu: election(event, globalConfig) })
     } catch (error) {
-      return mapError({ botId, lang, error }, res)
+      return mapError({ botId, lang: lang || '', error }, res)
     }
   })
 
   router.post('/train/:lang', needsWriteMW, async (req, res) => {
-    const { botId, lang } = req.params
+    const { botId, lang } = req.params as { botId: string; lang: string }
     try {
       const disableTraining = yn(process.env.BP_NLU_DISABLE_TRAINING)
       if (!disableTraining) {
@@ -158,7 +158,7 @@ export const registerRouter = async (bp: typeof sdk, app: NLUApplication) => {
   })
 
   router.post('/train/:lang/delete', needsWriteMW, async (req, res) => {
-    const { botId, lang } = req.params
+    const { botId, lang } = req.params as { botId: string; lang: string }
     try {
       await app.getBot(botId).cancelTraining(lang)
       res.sendStatus(200)
