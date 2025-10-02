@@ -8,7 +8,7 @@
   },
   "scripts": {
     "start": "cross-env PORT=3001 react-app-rewired start",
-    "build": "react-app-rewired --max_old_space_size=4096 build",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider react-app-rewired --max_old_space_size=4096 build",
     "test": "react-app-rewired test --env=jsdom",
     "clear-cache": "rimraf node_modules/.cache"
   },
