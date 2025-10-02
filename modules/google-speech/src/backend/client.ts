@@ -152,7 +152,7 @@ export class GoogleSpeechClient {
     // Note that transcription is limited to 60 seconds audio.
     // Use a GCS file for audio longer than 1 minute.
     const audio: IRecognitionAudio = {
-      content: buffer
+      content: buffer as any
     }
 
     const config: IRecognitionConfig = {

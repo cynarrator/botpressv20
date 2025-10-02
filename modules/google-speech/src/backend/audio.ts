@@ -28,7 +28,7 @@ export class Audio {
     const argumentSampleRate = ['-ar', `${newSampleRate}`]
 
     const result = ffmpeg({
-      MEMFS: [{ name: this.filenameIn, data: buffer }],
+      MEMFS: [{ name: this.filenameIn, data: buffer as any }],
       arguments: [...argumentIn, ...argumentCodec, ...argumentSampleRate, this.filenameOut],
       print(_data) {},
       printErr(_data) {},
@@ -54,7 +54,7 @@ export class Audio {
     const argumentCodec = LIBS_CONVERSION[this.codec] ? ['-acodec', LIBS_CONVERSION[this.codec]] : []
 
     const result = ffmpeg({
-      MEMFS: [{ name: this.filenameIn, data: buffer }],
+      MEMFS: [{ name: this.filenameIn, data: buffer as any }],
       arguments: [...argumentIn, ...argumentCodec, this.customFilenameOut(EXTENSIONS_CONVERSION[this.container])],
       print(_data) {},
       printErr(_data) {},
