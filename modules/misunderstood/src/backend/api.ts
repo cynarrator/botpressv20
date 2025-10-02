@@ -4,7 +4,7 @@ import { asyncMiddleware as asyncMw, StandardError, UnexpectedError } from 'comm
 import { Request, Response } from 'express'
 import moment from 'moment'
 
-import { FlaggedEvent, FLAGGED_MESSAGE_STATUSES } from '../types'
+import { FlaggedEvent, FLAGGED_MESSAGE_STATUS, FLAGGED_MESSAGE_STATUSES } from '../types'
 
 import Db from './db'
 
@@ -68,7 +68,11 @@ export default async (bp: typeof sdk, db: Db) => {
       const { language, startDate, endDate, reason } = extractQuery(req.query)
 
       try {
-        const data = await db.listEvents(botId, language, status, { startDate, endDate, reason })
+        const data = await db.listEvents(botId, language, status as FLAGGED_MESSAGE_STATUS, {
+          startDate,
+          endDate,
+          reason
+        })
         res.json(data)
       } catch (err) {
         throw new StandardError('Error listing events', err)
@@ -105,7 +109,7 @@ export default async (bp: typeof sdk, db: Db) => {
         const axiosConfig = await bp.http.getAxiosConfigForBot(botId, { localUrl: true })
         setTimeout(() => {
           // eslint-disable-next-line @typescript-eslint/no-floating-promises
-          Promise.map(modifiedLanguages, lang => axios.post(`/mod/nlu/train/${lang}`, {}, axiosConfig))
+          Promise.all(modifiedLanguages.map(lang => axios.post(`/mod/nlu/train/${lang}`, {}, axiosConfig)))
         }, 1000)
         res.sendStatus(200)
       } catch (err) {
