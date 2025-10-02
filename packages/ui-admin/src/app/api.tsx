@@ -1,5 +1,4 @@
 import axios from 'axios'
-import Promise from 'bluebird'
 import { auth, toast } from 'botpress/shared'
 import { CSRF_TOKEN_HEADER } from 'common/auth'
 import _ from 'lodash'
