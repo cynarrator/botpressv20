@@ -86,7 +86,7 @@ export default class MisunderstoodMainView extends React.Component<Props, State>
   }
 
   setStateP<K extends keyof State>(update: Pick<State, K>) {
-    return new Promise(resolve => {
+    return new Promise<void>(resolve => {
       this.setState(update, () => {
         resolve()
       })
