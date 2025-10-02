@@ -1,6 +1,5 @@
 const path = require('path')
 const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
-const HardSourceWebpackPlugin = require('hard-source-webpack-plugin')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
@@ -93,22 +92,6 @@ module.exports = {
       },
       ...config.module.rules
     ]
-
-    /**
-     * A bit counter-intuitive, but you don't want it when using the dev server (env === development)
-     * and you don't want it when building the final release (isProductionBuild).
-     * But, you want it when developing locally and building the whole project (env === production / isProductionBuild = false)
-     */
-    if (env !== 'development' && !isProductionBuild) {
-      config.plugins.push(
-        new HardSourceWebpackPlugin({
-          info: {
-            mode: 'none',
-            level: 'debug'
-          }
-        })
-      )
-    }
 
     return config
   },
