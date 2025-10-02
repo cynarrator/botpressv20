@@ -17,7 +17,7 @@ export default async (bp: typeof sdk) => {
   authRouter.get(
     '/token',
     asyncMiddleware(async (req, res) => {
-      const expiresIn = req.query.expiresIn || '1m'
+      const expiresIn = (req.query.expiresIn as string) || '1m'
 
       try {
         const token = jsonwebtoken.sign({}, process.APP_SECRET, { expiresIn })
