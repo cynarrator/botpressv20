@@ -68,7 +68,9 @@ export const executeNpm = async (args: string[] = ['install'], customLibsDir?: s
     spawned.stdout.on('data', msg => resultBuffer.push(msg.toString()))
     spawned.stderr.on('data', msg => resultBuffer.push(msg.toString()))
 
-    await Promise.fromCallback(cb => spawned.stdout.on('close', cb))
+    await new Promise<void>(resolve => {
+      spawned.stdout.on('close', () => resolve())
+    })
 
     return resultBuffer.join('')
   } catch (err) {
@@ -89,7 +91,9 @@ export const createNodeSymlink = async () => {
 
 export const syncAllFiles = async (bp: typeof sdk) => {
   const files = await bp.ghost.forGlobal().directoryListing(LIB_FOLDER, '*.*')
-  await Promise.mapSeries(files, file => copyFileLocally(file, bp))
+  for (const file of files) {
+    await copyFileLocally(file, bp)
+  }
 }
 
 export const copyFileLocally = async (fileName: string, bp: typeof sdk): Promise<boolean> => {
