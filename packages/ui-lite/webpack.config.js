@@ -24,20 +24,19 @@ const config = {
   resolve: {
     extensions: ['.tsx', '.ts', '.js'],
     alias: {
-      common: path.resolve(__dirname, '../bp/dist/common')
-    },
-    fallback: {
+      common: path.resolve(__dirname, '../bp/dist/common'),
       path: require.resolve('path-browserify'),
       os: require.resolve('os-browserify/browser'),
       crypto: require.resolve('crypto-browserify'),
       stream: require.resolve('stream-browserify'),
       util: require.resolve('util'),
-      buffer: require.resolve('buffer'),
-      process: require.resolve('process/browser'),
-      fs: false,
-      net: false,
-      tls: false
+      buffer: require.resolve('buffer')
     }
+  },
+  node: {
+    fs: 'empty',
+    net: 'empty',
+    tls: 'empty'
   },
   optimization: {
     minimizer: [
@@ -125,9 +124,6 @@ const config = {
         ],
         use: [
           {
-            loader: 'thread-loader'
-          },
-          {
             loader: 'babel-loader',
             options: {
               presets: [
@@ -149,7 +145,7 @@ const config = {
               ],
               compact: true,
               babelrc: false,
-              cacheDirectory: true
+              cacheDirectory: false
             }
           }
         ]
