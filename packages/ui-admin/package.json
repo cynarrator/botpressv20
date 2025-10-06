@@ -8,7 +8,9 @@
   },
   "scripts": {
     "start": "cross-env PORT=3001 react-app-rewired start",
-    "build": "cross-env NODE_ENV=production GENERATE_SOURCEMAP=false TSC_COMPILE_ON_ERROR=true SKIP_PREFLIGHT_CHECK=true DISABLE_ESLINT_PLUGIN=true NODE_OPTIONS='--openssl-legacy-provider --max_old_space_size=7168' react-app-rewired build",
+    "build": "cross-env NODE_ENV=production BUILD_PATH=./build GENERATE_SOURCEMAP=false TSC_COMPILE_ON_ERROR=true SKIP_PREFLIGHT_CHECK=true DISABLE_ESLINT_PLUGIN=true NODE_OPTIONS='--openssl-legacy-provider --max_old_space_size=7168' react-app-rewired build",
+    "postbuild": "node minify-build.js",
+    "build:no-minify": "cross-env NODE_ENV=production GENERATE_SOURCEMAP=false TSC_COMPILE_ON_ERROR=true SKIP_PREFLIGHT_CHECK=true DISABLE_ESLINT_PLUGIN=true NODE_OPTIONS='--openssl-legacy-provider --max_old_space_size=7168' react-app-rewired build",
     "test": "react-app-rewired test --env=jsdom",
     "clear-cache": "rimraf node_modules/.cache"
   },

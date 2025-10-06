@@ -7,6 +7,17 @@ module.exports = {
   webpack: (config, env) => {
     const isProduction = env === 'production'
 
+    // Ensure mode is set
+    config.mode = isProduction ? 'production' : 'development'
+
+    // Don't bail on errors - continue to emit files
+    config.bail = false
+
+    // Keep default output configuration, just ensure path is set
+    if (!config.output.path || !config.output.path.includes('build')) {
+      config.output.path = path.resolve(__dirname, 'build')
+    }
+
     config.resolve.alias['common'] = path.join(__dirname, '../bp/dist/common')
     config.resolve.alias['~'] = path.join(__dirname, './src')
     config.resolve.alias['botpress/shared'] = '@botpress/ui-shared'
@@ -30,10 +41,13 @@ module.exports = {
       minimize: false, // Disable minification to save memory
       removeAvailableModules: false,
       removeEmptyChunks: false,
-      splitChunks: false, // Disable code splitting to reduce memory
-      runtimeChunk: false,
-      usedExports: false,
-      concatenateModules: false
+      splitChunks: {
+        chunks: 'all',
+        name: false
+      },
+      runtimeChunk: {
+        name: entrypoint => `runtime-${entrypoint.name}`
+      }
     }
 
     // Remove or disable memory-intensive plugins
@@ -60,7 +74,7 @@ module.exports = {
             {
               copy: [
                 {
-                  source: 'dist',
+                  source: 'build',
                   destination: path.resolve(__dirname, '../bp/dist/admin/ui/public')
                 }
               ]
@@ -72,35 +86,26 @@ module.exports = {
 
     const oneOfConfigIdx = config.module.rules.findIndex(x => x.oneOf)
 
-    // Override the CSS generation - simplified to reduce memory usage
-    config.module.rules[oneOfConfigIdx].oneOf = [
-      {
-        test: /\.scss$/,
-        use: [
-          {
-            loader: 'style-loader'
-          },
-          {
-            loader: 'css-loader',
-            options: {
-              modules: {
-                localIdentName: '[name]__[local]___[hash:base64:5]'
-              },
-              url: false,
-              importLoaders: 1,
-              sourceMap: false
+    // Override CSS loaders to ignore URL resolution (avoids missing font file errors)
+    config.module.rules[oneOfConfigIdx].oneOf = config.module.rules[oneOfConfigIdx].oneOf.map(rule => {
+      if (rule.test && (rule.test.toString().includes('\\.css') || rule.test.toString().includes('\\.scss'))) {
+        if (rule.use && Array.isArray(rule.use)) {
+          rule.use = rule.use.map(loader => {
+            if (typeof loader === 'object' && loader.loader && loader.loader.includes('css-loader')) {
+              return {
+                ...loader,
+                options: {
+                  ...loader.options,
+                  url: false // Disable URL resolution to avoid missing font errors
+                }
+              }
             }
-          },
-          {
-            loader: 'sass-loader',
-            options: {
-              sourceMap: false
-            }
-          }
-        ]
-      },
-      ...config.module.rules[oneOfConfigIdx].oneOf
-    ]
+            return loader
+          })
+        }
+      }
+      return rule
+    })
 
     // Configuration works for react and react-dom, but @blueprintjs still needs a special handling to make it work
     config.module.rules = [
