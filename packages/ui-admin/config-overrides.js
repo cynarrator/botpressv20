@@ -3,18 +3,52 @@ const ModuleScopePlugin = require('react-dev-utils/ModuleScopePlugin')
 const FileManagerPlugin = require('filemanager-webpack-plugin')
 const { createProxyMiddleware } = require('http-proxy-middleware')
 
-const isProductionBuild = process.argv.includes('--prod')
-const noMap = process.argv.find(x => x.toLowerCase() === '--nomap')
-
 module.exports = {
   webpack: (config, env) => {
+    const isProduction = env === 'production'
+
     config.resolve.alias['common'] = path.join(__dirname, '../bp/dist/common')
     config.resolve.alias['~'] = path.join(__dirname, './src')
     config.resolve.alias['botpress/shared'] = '@botpress/ui-shared'
     config.resolve.plugins = config.resolve.plugins.filter(p => !p instanceof ModuleScopePlugin)
-    config.devtool = isProductionBuild || noMap ? false : 'source-map'
+
+    // Disable source maps in production to save memory
+    config.devtool = false
 
     config.infrastructureLogging = { level: 'error' }
+
+    // Disable performance hints to reduce memory
+    config.performance = {
+      hints: false,
+      maxEntrypointSize: 512000000,
+      maxAssetSize: 512000000
+    }
+
+    // Aggressive memory optimization
+    config.optimization = {
+      ...config.optimization,
+      minimize: false, // Disable minification to save memory
+      removeAvailableModules: false,
+      removeEmptyChunks: false,
+      splitChunks: false, // Disable code splitting to reduce memory
+      runtimeChunk: false,
+      usedExports: false,
+      concatenateModules: false
+    }
+
+    // Remove or disable memory-intensive plugins
+    config.plugins = config.plugins.filter(plugin => {
+      const name = plugin.constructor.name
+      // Remove TypeScript checker plugin completely
+      if (name === 'ForkTsCheckerWebpackPlugin') {
+        return false
+      }
+      // Remove ESLint plugin
+      if (name === 'ESLintWebpackPlugin') {
+        return false
+      }
+      return true
+    })
 
     config.plugins.push(
       new FileManagerPlugin({
@@ -38,7 +72,7 @@ module.exports = {
 
     const oneOfConfigIdx = config.module.rules.findIndex(x => x.oneOf)
 
-    // Override the CSS generation so we have .d.ts files for scss
+    // Override the CSS generation - simplified to reduce memory usage
     config.module.rules[oneOfConfigIdx].oneOf = [
       {
         test: /\.scss$/,
@@ -47,20 +81,21 @@ module.exports = {
             loader: 'style-loader'
           },
           {
-            loader: 'css-modules-typescript-loader'
-          },
-          {
             loader: 'css-loader',
             options: {
               modules: {
                 localIdentName: '[name]__[local]___[hash:base64:5]'
               },
               url: false,
-              importLoaders: 1
+              importLoaders: 1,
+              sourceMap: false
             }
           },
           {
-            loader: 'sass-loader'
+            loader: 'sass-loader',
+            options: {
+              sourceMap: false
+            }
           }
         ]
       },

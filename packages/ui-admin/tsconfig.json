@@ -6,21 +6,24 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "allowJs": true,
-    "target": "es2021",
+    "target": "es5",
     "jsx": "react",
     "types": [],
     "skipLibCheck": true,
     "allowSyntheticDefaultImports": true,
     "strict": false,
-    "forceConsistentCasingInFileNames": true,
+    "forceConsistentCasingInFileNames": false,
     "isolatedModules": true,
     "noEmit": true,
-    "noFallthroughCasesInSwitch": true,
-    "incremental": true,
+    "noFallthroughCasesInSwitch": false,
+    "incremental": false,
+    "noImplicitAny": false,
+    "noUnusedLocals": false,
+    "noUnusedParameters": false,
     "lib": [
       "dom",
       "dom.iterable",
-      "es2021"
+      "esnext"
     ]
   },
   "include": [
