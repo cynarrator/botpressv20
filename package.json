@@ -23,6 +23,8 @@
     "postinstall": "yarn cmd postinstall",
     "start": "yarn workspace botpress start",
     "cmd": "cross-env NODE_OPTIONS=--openssl-legacy-provider yarn run gulp",
+    "rebuild:sqlite": "cd node_modules/sqlite3 && yarn run install --build-from-source",
+    "prebuild": "yarn rebuild:sqlite",
     "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider yarn cmd build",
     "watch": "cross-env NODE_OPTIONS=--openssl-legacy-provider yarn cmd watch",
     "package": "cross-env NODE_OPTIONS=--openssl-legacy-provider yarn cmd package",
