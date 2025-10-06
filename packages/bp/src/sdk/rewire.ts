@@ -98,11 +98,17 @@ const rewire = function(this: NodeRequireFunction, mod: string) {
           /* Swallow error, try next one */
         }
       }
-      throw new Error(
-        `Could not require NativeExtension "${ext}" for OS "${
-          process.distro
-        }". Tried the following paths: [ ${newPaths.join(', ')} ]`
-      )
+      // Fallback: try to use the original require path (from node_modules)
+      // This allows cross-platform compatibility when pre-built binaries are not available
+      try {
+        return originalRequire.apply(this, (arguments as never) as [string])
+      } catch (err) {
+        throw new Error(
+          `Could not require NativeExtension "${ext}" for OS "${
+            process.distro
+          }". Tried the following paths: [ ${newPaths.join(', ')} ] and fallback to node_modules failed: ${err.message}`
+        )
+      }
     }
   }
 
