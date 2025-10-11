@@ -9,10 +9,10 @@ const confirmDialog = async (message: string, options?: any) => {
 
 // Simple MoreOptions replacement to avoid Blueprint.js dependency
 const MoreOptions = ({ show, onToggle, items }: any) => {
-  if (!show || !items.length) return null
+  if (!items.length) return null
 
   return (
-    <>
+    <div style={{ position: 'relative' }}>
       <button
         onClick={e => {
           e.stopPropagation()
@@ -20,9 +20,50 @@ const MoreOptions = ({ show, onToggle, items }: any) => {
         }}
         type="button"
         className="more-options-btn"
-        style={{ marginLeft: '8px', padding: '4px 8px', cursor: 'pointer' }}
+        style={{
+          background: 'none',
+          padding: '8px',
+          border: 0,
+          cursor: 'pointer',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          minWidth: '32px',
+          height: '32px'
+        }}
       >
-        ⋯
+        <div
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '3px'
+          }}
+        >
+          <div
+            style={{
+              background: '#666',
+              borderRadius: '100%',
+              height: '4px',
+              width: '4px'
+            }}
+          />
+          <div
+            style={{
+              background: '#666',
+              borderRadius: '100%',
+              height: '4px',
+              width: '4px'
+            }}
+          />
+          <div
+            style={{
+              background: '#666',
+              borderRadius: '100%',
+              height: '4px',
+              width: '4px'
+            }}
+          />
+        </div>
       </button>
       {show && (
         <>
@@ -43,16 +84,16 @@ const MoreOptions = ({ show, onToggle, items }: any) => {
           <ul
             style={{
               position: 'absolute',
-              right: '10px',
+              right: '0px',
               top: '100%',
               backgroundColor: 'white',
               border: '1px solid #ccc',
               borderRadius: '4px',
               listStyle: 'none',
               padding: '8px 0',
-              margin: '4px 0',
+              margin: '4px 0 0 0',
               zIndex: 1000,
-              minWidth: '150px',
+              minWidth: '180px',
               boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
             }}
           >
@@ -83,7 +124,7 @@ const MoreOptions = ({ show, onToggle, items }: any) => {
           </ul>
         </>
       )}
-    </>
+    </div>
   )
 }
 import Close from '../icons/Close'
@@ -403,10 +444,25 @@ class Header extends React.Component<HeaderProps> {
 
     if (this.props.isEmulator) {
       return (
-        <div className="bpw-emulator-header">
+        <div
+          className="bpw-emulator-header"
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            padding: '12px 20px',
+            position: 'relative'
+          }}
+        >
           <span className="bpw-emulator-header-tab">Emulator</span>
-          <div>
-            <span className="bpw-emulator-buttons">{this.props.showResetButton && this.renderResetButton()}</span>
+          <div
+            style={{
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px'
+            }}
+          >
+            {this.props.showResetButton && this.renderResetButton()}
             <MoreOptions show={this.state.showingOption} onToggle={this.setShowingOption} items={optionsItems} />
           </div>
         </div>
