@@ -32,7 +32,7 @@ export async function buildBackend(modulePath: string): Promise<void> {
         '@babel/preset-env',
         {
           targets: {
-            node: 'current'
+            node: '12'
           }
         }
       ],
