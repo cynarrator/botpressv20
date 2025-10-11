@@ -18,16 +18,16 @@ try {
   }
 }
 
-// Try to find the build output directory (could be 'build' or 'dist')
-let buildDir = path.join(__dirname, 'build', 'static', 'js')
+// Try to find the build output directory (could be 'dist' or 'build')
+let buildDir = path.join(__dirname, 'dist', 'static', 'js')
 if (!fs.existsSync(buildDir)) {
-  buildDir = path.join(__dirname, 'dist', 'static', 'js')
-}
-if (!fs.existsSync(buildDir)) {
-  buildDir = path.join(__dirname, 'build')
+  buildDir = path.join(__dirname, 'build', 'static', 'js')
 }
 if (!fs.existsSync(buildDir)) {
   buildDir = path.join(__dirname, 'dist')
+}
+if (!fs.existsSync(buildDir)) {
+  buildDir = path.join(__dirname, 'build')
 }
 
 async function minifyFile(filePath) {
