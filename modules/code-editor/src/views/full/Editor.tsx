@@ -163,7 +163,16 @@ class Editor extends React.Component<Props> {
     }
 
     const { uri, readOnly, content, location } = file
-    const fileType = location.endsWith('.json') ? 'json' : 'typescript'
+
+    // Determine the correct language for syntax highlighting
+    let fileType = 'typescript'
+    if (location.endsWith('.json')) {
+      fileType = 'json'
+    } else if (location.endsWith('.js')) {
+      fileType = 'javascript'
+    } else if (location.endsWith('.ts')) {
+      fileType = 'typescript'
+    }
 
     const model = monaco.editor.getModel(uri)
     if (!model) {
@@ -183,7 +192,27 @@ class Editor extends React.Component<Props> {
   saveChanges = async (uri?: monaco.Uri) => {
     if (!uri) {
       uri = this.props.editor.currentFile.uri
-      await this.editor.getAction('editor.action.formatDocument').run()
+
+      // Check for syntax errors before saving
+      const markers = monaco.editor.getModelMarkers({ resource: uri })
+      const errors = markers.filter(x => x.severity === MONACO_MARKER_ERROR_SEVERITY)
+
+      if (errors.length > 0) {
+        const firstError = errors[0]
+        const errorTitle = `Error: ${firstError.startLineNumber}:${firstError.startColumn} ${firstError.message}`
+
+        // If multiple errors, show count in the message
+        const errorMessage =
+          errors.length > 1 ? `(${errors.length - 1} more error${errors.length - 1 > 1 ? 's' : ''} in file)` : undefined
+
+        toast.failure(errorTitle, errorMessage)
+        return
+      }
+
+      const formatAction = this.editor.getAction('editor.action.formatDocument')
+      if (formatAction) {
+        await formatAction.run()
+      }
     }
 
     if (await this.props.editor.saveFile(uri)) {
@@ -218,7 +247,9 @@ class Editor extends React.Component<Props> {
 
     _.forEach(typings, (content, name) => {
       if (!name.includes('.schema.')) {
-        monaco.languages.typescript.typescriptDefaults.addExtraLib(content, 'bp://types/' + name)
+        if (monaco.languages.typescript?.typescriptDefaults) {
+          monaco.languages.typescript.typescriptDefaults.addExtraLib(content, 'bp://types/' + name)
+        }
       }
     })
   }
@@ -236,10 +267,12 @@ class Editor extends React.Component<Props> {
       []
     )
 
-    monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
-      schemas,
-      validate: true
-    })
+    if (monaco.languages.json?.jsonDefaults) {
+      monaco.languages.json.jsonDefaults.setDiagnosticsOptions({
+        schemas,
+        validate: true
+      })
+    }
   }
 
   handleContentChanged = () => {

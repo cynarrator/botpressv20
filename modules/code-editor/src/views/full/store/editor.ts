@@ -117,7 +117,7 @@ class EditorStore {
 
   @action.bound
   switchTab(nextUri: monaco.Uri) {
-    if (this.currentTab) {
+    if (this.currentTab && this._editorRef) {
       this.updateFileContent({ state: this._editorRef.saveViewState() }, this.currentTab.uri)
     }
 
