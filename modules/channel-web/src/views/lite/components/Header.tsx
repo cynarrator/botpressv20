@@ -2,8 +2,90 @@ import { observe } from 'mobx'
 import { inject, observer } from 'mobx-react'
 import React from 'react'
 
-import confirmDialog from '../../../../../../packages/ui-shared-lite/ConfirmDialog'
-import MoreOptions from '../../../../../../packages/ui-shared-lite/MoreOptions'
+// Simple confirm dialog replacement to avoid Blueprint.js dependency
+const confirmDialog = async (message: string, options?: any) => {
+  return window.confirm(message)
+}
+
+// Simple MoreOptions replacement to avoid Blueprint.js dependency
+const MoreOptions = ({ show, onToggle, items }: any) => {
+  if (!show || !items.length) return null
+
+  return (
+    <>
+      <button
+        onClick={e => {
+          e.stopPropagation()
+          onToggle(!show)
+        }}
+        type="button"
+        className="more-options-btn"
+        style={{ marginLeft: '8px', padding: '4px 8px', cursor: 'pointer' }}
+      >
+        ⋯
+      </button>
+      {show && (
+        <>
+          <div
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              right: 0,
+              bottom: 0,
+              zIndex: 999
+            }}
+            onClick={e => {
+              e.stopPropagation()
+              onToggle(false)
+            }}
+          />
+          <ul
+            style={{
+              position: 'absolute',
+              right: '10px',
+              top: '100%',
+              backgroundColor: 'white',
+              border: '1px solid #ccc',
+              borderRadius: '4px',
+              listStyle: 'none',
+              padding: '8px 0',
+              margin: '4px 0',
+              zIndex: 1000,
+              minWidth: '150px',
+              boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+            }}
+          >
+            {items.map((item: any, index: number) => (
+              <li key={index}>
+                <button
+                  onClick={e => {
+                    e.stopPropagation()
+                    onToggle(false)
+                    item.action()
+                  }}
+                  style={{
+                    width: '100%',
+                    padding: '8px 16px',
+                    border: 'none',
+                    background: 'none',
+                    textAlign: 'left',
+                    cursor: 'pointer',
+                    fontSize: '14px'
+                  }}
+                  onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#f5f5f5')}
+                  onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'transparent')}
+                >
+                  {item.label}
+                </button>
+              </li>
+            ))}
+          </ul>
+        </>
+      )}
+    </>
+  )
+}
 import Close from '../icons/Close'
 import Delete from '../icons/Delete'
 import Download from '../icons/Download'

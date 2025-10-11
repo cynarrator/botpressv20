@@ -1,4 +1,3 @@
-import '@blueprintjs/core/lib/css/blueprint.css'
 import { configure } from 'mobx'
 import { inject, observer, Provider } from 'mobx-react'
 import React from 'react'
@@ -52,8 +51,8 @@ const Wrapper = observer(ExposedWebChat)
  * @deprecated Since the way views are handled has changed, we're also exporting views in lowercase.
  * https://botpress.com/docs/developers/migrate/
  */
-export { Embedded as embedded } from '.'
-export { Fullscreen as fullscreen } from '.'
+export const embedded = Embedded
+export const fullscreen = Fullscreen
 
 export {
   Carousel,

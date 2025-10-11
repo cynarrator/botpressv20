@@ -28,6 +28,11 @@ export function config(projectPath) {
       libraryTarget: 'assign',
       library: libraryTarget(packageJson.name)
     },
+    node: {
+      global: true,
+      __filename: false,
+      __dirname: false
+    },
     externals: {
       react: 'React',
       'react-dom': 'ReactDOM',
@@ -50,7 +55,12 @@ export function config(projectPath) {
       modules: ['node_modules', path.resolve(__dirname, '../../../packages/ui-shared/node_modules')],
       extensions: ['.js', '.jsx', '.tsx', '.ts']
     },
-    plugins: [new CleanWebpackPlugin()],
+    plugins: [
+      new CleanWebpackPlugin(),
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+      })
+    ],
     module: {
       rules: [
         { test: /\.tsx?$/, loader: 'ts-loader', exclude: /node_modules/ },
@@ -121,11 +131,20 @@ export function config(projectPath) {
       libraryTarget: 'assign',
       library: libraryTarget(packageJson.name)
     },
+    node: {
+      global: true,
+      __filename: false,
+      __dirname: false
+    },
     externals: {
       react: 'React',
       'react-dom': 'ReactDOM'
     },
-    plugins: [] // We clear the plugins here, since the cleanup is already done by the "full" view
+    plugins: [
+      new webpack.DefinePlugin({
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV || 'production')
+      })
+    ] // We clear most plugins here, since the cleanup is already done by the "full" view
   })
 
   if (process.argv.find(x => x.toLowerCase() === '--analyze-lite')) {
