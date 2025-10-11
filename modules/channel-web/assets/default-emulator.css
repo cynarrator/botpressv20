@@ -21,6 +21,7 @@
     --hover-lighthouse: #f39c82;
     --hover-lighthouse-30: #f9ddd5;
     --ocean: #3276ea;
+    --light-ocean: #468df8;
     --hover-ocean: #cad7f5;
 
     --spacing-x-small: 2px;
@@ -52,7 +53,7 @@
   }
 
   .bpw-chat-bubble-content {
-    border: solid 1px var(--seashell);
+    /* border: solid 1px var(--seashell); */
     font-size: 12px;
     line-height: 1.25;
     border-radius: 15px;
@@ -76,7 +77,7 @@
   }
 
   .bpw-from-bot .bpw-chat-bubble .bpw-chat-bubble-content {
-    background-color: var(--white);
+    background-color: var(--bg);
   }
 
   .bpw-from-bot .bpw-bubble-highlight .bpw-chat-bubble-content {
@@ -379,7 +380,7 @@
     flex-grow: 1;
   }
 
-  .bpw-msg-list {
+  .bpw-msg-list > div {
     padding: 0 0.5rem 0.5rem 0.5rem;
   }
 
@@ -397,6 +398,7 @@
 
   .bpw-date-container + .bpw-message-big-container .bpw-bubble-session_reset {
     margin-top: 0 !important;
+    border-radius: 5px;
   }
 
   .bpw-new-messages-indicator {
@@ -676,8 +678,11 @@
 
   .bpw-convo-item .bpw-title {
     -webkit-box-align: center;
-    -ms-flex-align: center;
-    align-items: center;
+
+    -ms-flex-direction: column;
+    flex-direction: column;
+    -ms-flex-align: end;
+    align-items: end;
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -711,16 +716,11 @@
     text-align: right;
     font-size: 0.875rem;
     color: #9a9a9a;
-    position: absolute;
+    /* position: absolute; */
     right: 0;
   }
   .bpw-keyboard-quick_reply-dropdown {
     margin: 0.2rem 0.5rem;
-  }
-
-  .bpw-in-message-quick_reply-dropdown {
-    margin: 0.2rem 0.5rem;
-    width: 200px;
   }
 
   .bpw-composer {
@@ -780,9 +780,9 @@
   }
 
   .bpw-powered {
-    text-align: right;
-    border-top: 1px solid #aaaaaa;
-    padding: 2px 5px 2px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .bpw-send-buttons {
@@ -1275,4 +1275,43 @@
 
 .bpw-msg-hovering:hover {
   cursor: pointer;
+}
+
+/* CHANGES */
+
+.bpw-emulator-header {
+  padding: 12px 20px;
+}
+.bpw-header-icon.bpw-header-icon-reset {
+  display: flex;
+  align-items: center;
+}
+
+.bpw-emulator-header .more-options-btn {
+  top: 12px;
+}
+
+.bpw-emulator-header-tab {
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.25;
+  text-transform: uppercase;
+  padding: 5px 10px;
+  background: #2d6a4f;
+  color: white;
+  border-radius: 5px;
+  border-top: unset;
+}
+.bpw-chat-bubble {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.bpw-from-user .bpw-chat-bubble .bpw-chat-bubble-content {
+  background-color: #468df8;
+  color: #fff;
+}
+
+.reset-conversation-style {
+  color: #000;
 }
